@@ -1,24 +1,15 @@
 import {
   time,
   loadFixture,
-  mine,
 } from "@nomicfoundation/hardhat-toolbox/network-helpers";
-import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
 import { expect } from "chai";
 import hre from "hardhat";
-import { boolean } from "hardhat/internal/core/params/argumentTypes";
-import { SimpleSmartWallet } from "../typechain-types"
 
 describe("SimpleSmartWallet", function () {
   // We define a fixture to reuse the same setup in every test.
   // We use loadFixture to run this setup once, snapshot that state,
   // and reset Hardhat Network to that snapshot in every test.
   async function deployOneYearLockFixture() {
-    // const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-    // const ONE_GWEI = 1_000_000_000;
-
-    // const lockedAmount = ONE_GWEI;
-    // const unlockTime = (await time.latest()) + ONE_YEAR_IN_SECS;
 
     // Contracts are deployed using the first signer/account by default
     const [addressA, addressB, addressC] = await hre.ethers.getSigners();
@@ -30,45 +21,45 @@ describe("SimpleSmartWallet", function () {
   }
 
   describe("All Tests", function () {
-    // it("Deployment should have expected initial Owner", async function () {
-    //   const { simpleSmartWallet, addressA, addressB } = await loadFixture(deployOneYearLockFixture);
+    it("Deployment should have expected initial Owner", async function () {
+      const { simpleSmartWallet, addressA, addressB } = await loadFixture(deployOneYearLockFixture);
 
-    //   expect(await simpleSmartWallet.owner()).to.equal(addressA.address);
-    // });
+      expect(await simpleSmartWallet.owner()).to.equal(addressA.address);
+    });
 
-    // it("Should be able to verify a signature", async function () {
-    //   const { simpleSmartWallet, addressA, addressB, addressC } = await loadFixture(deployOneYearLockFixture);
+    it("Should be able to verify a signature", async function () {
+      const { simpleSmartWallet, addressA, addressB, addressC } = await loadFixture(deployOneYearLockFixture);
 
-    //   // Step 1: Prepare the message and hash it
-    //   const message = "Hello, world!";
-    //   const messageHash = hre.ethers.keccak256(hre.ethers.toUtf8Bytes(message)); 
+      // Step 1: Prepare the message and hash it
+      const message = "Hello, world!";
+      const messageHash = hre.ethers.keccak256(hre.ethers.toUtf8Bytes(message)); 
 
-    //   // Step 2: Sign the hashed message with addressA. The signMessage method expects a string,
-    //   const signature = await addressA.signMessage(hre.ethers.getBytes(messageHash));
+      // Step 2: Sign the hashed message with addressA. The signMessage method expects a string,
+      const signature = await addressA.signMessage(hre.ethers.getBytes(messageHash));
 
-    //   // Step 3: Call isValidSignature with the hashed message and signature.
-    //   const response = await simpleSmartWallet.isValidSignature(messageHash, signature);
+      // Step 3: Call isValidSignature with the hashed message and signature.
+      const response = await simpleSmartWallet.isValidSignature(messageHash, signature);
 
-    //   expect(response).to.equal('0x1626ba7e');
-    // });
+      expect(response).to.equal('0x1626ba7e');
+    });
 
-    // it("Signature verification should fail after updating signer", async function () {
-    //   const { simpleSmartWallet, addressA, addressB, addressC } = await loadFixture(deployOneYearLockFixture);
+    it("Signature verification should fail after updating signer", async function () {
+      const { simpleSmartWallet, addressA, addressB, addressC } = await loadFixture(deployOneYearLockFixture);
 
-    //   // Step 1: Verify signature with initial signer
-    //   const message = "Hello, world!";
-    //   const messageHash = hre.ethers.keccak256(hre.ethers.toUtf8Bytes(message)); 
-    //   const signature = await addressA.signMessage(hre.ethers.getBytes(messageHash));
-    //   const response = await simpleSmartWallet.isValidSignature(messageHash, signature);
-    //   expect(response).to.equal('0x1626ba7e');
+      // Step 1: Verify signature with initial signer
+      const message = "Hello, world!";
+      const messageHash = hre.ethers.keccak256(hre.ethers.toUtf8Bytes(message)); 
+      const signature = await addressA.signMessage(hre.ethers.getBytes(messageHash));
+      const response = await simpleSmartWallet.isValidSignature(messageHash, signature);
+      expect(response).to.equal('0x1626ba7e');
 
-    //   // Step 2: Set owner to addressB
-    //   await simpleSmartWallet.setOwner(addressB.address);
+      // Step 2: Set owner to addressB
+      await simpleSmartWallet.setOwner(addressB.address);
 
-    //   // Step 3: Attempt same call to verify signature
-    //   const response2 = await simpleSmartWallet.isValidSignature(messageHash, signature);
-    //   expect(response2).to.equal('0xffffffff');
-    // });
+      // Step 3: Attempt same call to verify signature
+      const response2 = await simpleSmartWallet.isValidSignature(messageHash, signature);
+      expect(response2).to.equal('0xffffffff');
+    });
 
     it("Signature verification of past block should still pass after updating signer", async function () {
       const { simpleSmartWallet, addressA, addressB, addressC } = await loadFixture(deployOneYearLockFixture);

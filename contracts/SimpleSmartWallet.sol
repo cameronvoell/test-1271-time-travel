@@ -45,7 +45,6 @@ contract SimpleSmartWallet is ERC1271, VerifySignature {
         // Validate signatures
         bytes32 ethSignedMessageHash = getEthSignedMessageHash(_hash);
         address signer = recoverSigner(ethSignedMessageHash, _signature);
-        console.log("Signer: %s", signer);
         if (signer == owner) {
             return 0x1626ba7e;
         } else {

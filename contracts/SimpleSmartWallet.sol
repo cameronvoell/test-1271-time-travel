@@ -2,7 +2,7 @@
 pragma solidity ^0.8.24;
 
 // Uncomment this line to use console.log
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 import "./ERC1271.sol";
 import "./VerifySignature.sol";
@@ -35,14 +35,10 @@ contract SimpleSmartWallet is ERC1271, VerifySignature {
     /**
      * @notice Verifies that the signer is the owner of the signing contract.
      */
-    /**
-     * @notice Verifies that the signer is the owner of the signing contract.
-     */
     function isValidSignature(
         bytes32 _hash,
         bytes memory _signature
     ) public view override returns (bytes4) {
-        // Validate signatures
         bytes32 ethSignedMessageHash = getEthSignedMessageHash(_hash);
         address signer = recoverSigner(ethSignedMessageHash, _signature);
         if (signer == owner) {
